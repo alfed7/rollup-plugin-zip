@@ -4,6 +4,7 @@ import * as rollup from 'rollup'
 import * as yauzl from 'yauzl'
 
 import zip from 'rollup-plugin-zip'
+import type { IPluginOptions } from 'rollup-plugin-zip'
 
 
 const PACKAGE_NAME     = 'test'
@@ -14,15 +15,15 @@ const DEFAULT_FILENAME = `${PACKAGE_NAME}-${PACKAGE_VERSION}.zip`
 process.env.npm_package_name    = PACKAGE_NAME
 process.env.npm_package_version = PACKAGE_VERSION
 
-interface IBuildPars<T> {
+interface IBuildPars {
   dir: string,
-  options?: T,
+  options?: IPluginOptions,
 }
 
-const build = async <T>({
+const build = async ({
   dir,
   options,
-}: IBuildPars<T>): Promise<void> => {
+}: IBuildPars): Promise<void> => {
   const bundle = await rollup.rollup({
     input: [
       `test/src/bar.js`,
@@ -84,9 +85,9 @@ const promisedReadEntries = (
 
 let ERROR_COUNT = 0
 
-const testCase = async <T>(
+const testCase = async (
   title: string,
-  options: IBuildPars<T>,
+  options: IBuildPars,
   filename: string,
 ): Promise<void> => {
   title = `Testing ${title}`

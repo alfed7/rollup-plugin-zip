@@ -8,7 +8,7 @@ const isAsset = (entry: OutputAsset | OutputChunk): entry is OutputAsset => (
   entry.type === 'asset'
 )
 
-interface IPluginOptions {
+export interface IPluginOptions {
   file?: string
   dir?: string
 }
@@ -20,7 +20,7 @@ const enum Cache {
   outfile = 'outfile',
   sourcemapFile = 'sourcemapFile',
 }
-
+var cache = new Map();
 const zip: RollupPluginZip = (options) => ({
   name: 'zip',
 
@@ -30,9 +30,9 @@ const zip: RollupPluginZip = (options) => ({
     if (dir) {
       distDir = path.resolve(distDir, dir)
     }
-    this.cache.set(Cache.distdir, distDir)
+    cache.set(Cache.distdir, distDir)
     if (sourcemap) {
-      this.cache.set(Cache.sourcemapFile, sourcemapFile)
+      cache.set(Cache.sourcemapFile, sourcemapFile)
     }
     // Get options
     let outFile  = options?.file
@@ -59,13 +59,13 @@ const zip: RollupPluginZip = (options) => ({
       outFile = path.resolve(outDir || distDir, outFile + '.zip')
     }
     // Save the output file path
-    this.cache.set(Cache.outfile, outFile)
+    cache.set(Cache.outfile, outFile)
   },
 
   writeBundle(_options, bundle): Promise<void> {
     return new Promise(resolve => {
-      const distDir = this.cache.get<string>(Cache.distdir)
-      const sourcemapFile = this.cache.get<string>(Cache.sourcemapFile)
+      const distDir = cache.get(Cache.distdir)
+      const sourcemapFile = cache.get(Cache.sourcemapFile)
       const zipFile = new ZipFile()
       Object.entries(bundle).forEach(([, entry]) => {
         if (isAsset(entry)) {
@@ -84,7 +84,7 @@ const zip: RollupPluginZip = (options) => ({
       if (sourcemapFile) {
         zipFile.addFile(path.resolve(distDir, sourcemapFile), sourcemapFile)
       }
-      const outFile = this.cache.get<string>(Cache.outfile)
+      const outFile = cache.get(Cache.outfile)
       const writeStream = fs.createWriteStream(outFile)
       zipFile.outputStream.pipe(writeStream)
       zipFile.end()
