@@ -21,7 +21,7 @@ const enum Cache {
   sourcemapFile = 'sourcemapFile',
 }
 var cache = new Map();
-const zip: RollupPluginZip = (options) => ({
+export const zip: RollupPluginZip = (options) => ({
   name: 'zip',
 
   generateBundle({dir, sourcemap, sourcemapFile}): void {

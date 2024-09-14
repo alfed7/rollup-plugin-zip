@@ -4,5 +4,5 @@ export interface IPluginOptions {
     dir?: string;
 }
 type RollupPluginZip = (options?: IPluginOptions) => Plugin;
-declare const zip: RollupPluginZip;
+export declare const zip: RollupPluginZip;
 export default zip;

@@ -73,4 +73,4 @@ const zip = (options) => ({
     },
 });
 
-export { zip as default };
+export { zip as default, zip };

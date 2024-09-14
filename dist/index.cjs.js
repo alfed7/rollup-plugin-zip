@@ -1,5 +1,7 @@
 'use strict';
 
+Object.defineProperty(exports, '__esModule', { value: true });
+
 var fs = require('fs');
 var path = require('path');
 var yazl = require('yazl');
@@ -95,4 +97,5 @@ const zip = (options) => ({
     },
 });
 
-module.exports = zip;
+exports.default = zip;
+exports.zip = zip;
